@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-paper text-ink antialiased; }
+  :focus-visible { @apply outline-none ring-2 ring-flare ring-offset-2 ring-offset-paper; }
+  h1, h2, h3 { @apply tracking-tight; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+  .eyebrow { @apply text-xs font-bold uppercase tracking-[0.18em] text-teal-dark; }
+  .card { @apply rounded-2xl border border-line bg-white shadow-card; }
+  .field-label { @apply mb-1.5 block text-sm font-semibold text-ink; }
+  .field { @apply block w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-[15px] text-ink placeholder:text-ink-muted/70 shadow-sm transition focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30 disabled:opacity-60; }
+  .field-error { @apply mt-1 text-sm font-medium text-flare-dark; }
+  .prose-body p + p { @apply mt-4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
