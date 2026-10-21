@@ -10,8 +10,6 @@ import { defaultServices } from "@/lib/content/defaults";
 import { getService, getServices, getSettings } from "@/lib/cms";
 import { siteUrl } from "@/lib/utils";
 
-export const revalidate = 60;
-
 export function generateStaticParams() {
   return defaultServices.map((s) => ({ slug: s.slug }));
 }

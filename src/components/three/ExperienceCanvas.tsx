@@ -1,6 +1,7 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import { PerformanceMonitor } from "@react-three/drei";
 import { CameraController } from "./CameraController";
 import { HotspotManager, type Hotspot } from "./HotspotManager";
@@ -35,6 +36,27 @@ export function Lights({ quality, extent = 60 }: { quality: Quality; extent?: nu
   );
 }
 
+/**
+ * Shadows come from static scenery, so re-render the shadow map a few times a
+ * second instead of every frame (moving agents do not cast shadows).
+ */
+export function ThrottledShadows({ every = 20 }: { every?: number }) {
+  const gl = useThree((s) => s.gl);
+  useEffect(() => {
+    gl.shadowMap.autoUpdate = false;
+    gl.shadowMap.needsUpdate = true;
+    return () => {
+      gl.shadowMap.autoUpdate = true;
+    };
+  }, [gl]);
+  const frame = useRef(0);
+  useFrame(() => {
+    frame.current += 1;
+    if (frame.current % every === 0) gl.shadowMap.needsUpdate = true;
+  });
+  return null;
+}
+
 /** Lower the quality one step when the frame rate drops (PerformanceManager). */
 export function PerformanceManager({ quality, onChange }: { quality: Quality; onChange: (q: Quality) => void }) {
   return (
@@ -67,15 +89,18 @@ export interface ExperienceCanvasProps {
   onQualityChange: (q: Quality) => void;
   /** Called if the GPU drops the WebGL context, so the page can fall back to static. */
   onContextLost?: () => void;
+  /** False when the hero is scrolled out of view: rendering pauses completely. */
+  active: boolean;
 }
 
 export default function ExperienceCanvas(props: ExperienceCanvasProps) {
   const preset = QUALITY_PRESETS[props.quality];
   return (
     <Canvas
-      shadows={preset.shadows ? "soft" : false}
+      frameloop={props.active ? "always" : "never"}
+      shadows={preset.shadows}
       dpr={preset.dpr}
-      gl={{ antialias: props.quality !== "low", powerPreference: "high-performance" }}
+      gl={{ antialias: props.quality !== "low", powerPreference: "high-performance", stencil: false }}
       camera={{ fov: 32, near: 1, far: 600, position: [62, 64, 70] }}
       style={{ touchAction: "pan-y" }}
       onCreated={({ gl }) => {
@@ -89,6 +114,7 @@ export default function ExperienceCanvas(props: ExperienceCanvasProps) {
         <color attach="background" args={[COLORS.paper]} />
         <fog attach="fog" args={[COLORS.paper, 130, 260]} />
         <Lights quality={props.quality} />
+        {preset.shadows && <ThrottledShadows />}
         <PerformanceManager quality={props.quality} onChange={props.onQualityChange} />
         <SceneManager qsLayer={props.qsLayer} modelUrl={props.modelUrl} />
         <HotspotManager compact={props.compactHotspots} hotspots={props.hotspots} selected={props.selected} onSelect={props.onSelect} visible={props.showHotspots} />

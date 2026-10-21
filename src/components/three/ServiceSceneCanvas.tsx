@@ -27,16 +27,19 @@ export default function ServiceSceneCanvas({
   quality,
   motion,
   qsLayer,
+  active = true,
 }: {
   sceneKey: SceneKey;
   quality: Quality;
   motion: boolean;
   qsLayer: QsLayer | null;
+  active?: boolean;
 }) {
   const preset = QUALITY_PRESETS[quality];
   return (
     <Canvas
-      shadows={preset.shadows ? "soft" : false}
+      frameloop={active ? "always" : "never"}
+      shadows={preset.shadows}
       dpr={preset.dpr}
       gl={{ antialias: quality !== "low" }}
       camera={{ fov: 30, near: 1, far: 300, position: [23, 20, 26] }}

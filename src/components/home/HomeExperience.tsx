@@ -2,7 +2,8 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useInView } from "@/components/three/useInView";
 import { FastForward, Image as ImageIcon, Loader2, Pause, Play } from "lucide-react";
 import { buttonClass } from "@/components/ui/button";
 import { ContentOverlay, type OverlayService } from "./ContentOverlay";
@@ -66,6 +67,8 @@ export function HomeExperience({
   const [arrived, setArrived] = useState(false);
   const [loadCanvas, setLoadCanvas] = useState(false);
   const [skipToken, setSkipToken] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const onScreen = useInView(sectionRef);
 
   const use3D = sceneEnabled && prefs.ready && !prefs.staticView;
 
@@ -161,10 +164,11 @@ export function HomeExperience({
   }
 
   return (
-    <section aria-label="Interactive service explorer" className="relative h-[100svh] min-h-[620px] w-full overflow-hidden bg-paper">
+    <section ref={sectionRef} aria-label="Interactive service explorer" className="relative h-[100svh] min-h-[620px] w-full overflow-hidden bg-paper">
       <div className="absolute inset-0">
         {loadCanvas && (
           <ExperienceCanvas
+            active={onScreen}
             quality={prefs.quality}
             motion={prefs.motion}
             view={view}

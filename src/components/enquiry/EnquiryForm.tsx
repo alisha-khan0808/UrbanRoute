@@ -58,18 +58,9 @@ function Field({
 const describedBy = (id: string, errors: Errors, hint = false) =>
   errors[id] ? `${id}-error` : hint ? `${id}-hint` : undefined;
 
-export function EnquiryForm({
-  services,
-  initialService,
-  initialLocation,
-}: {
-  services: { slug: string; title: string }[];
-  initialService?: string;
-  initialLocation?: string;
-}) {
-  const [service, setService] = useState(
-    initialService && services.some((s) => s.slug === initialService) ? initialService : "",
-  );
+export function EnquiryForm({ services }: { services: { slug: string; title: string }[] }) {
+  const [service, setService] = useState("");
+  const [initialLocation, setInitialLocation] = useState<string>();
   const [qsTypes, setQsTypes] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Errors>({});
@@ -83,7 +74,13 @@ export function EnquiryForm({
 
   useEffect(() => {
     mountedAt.current = performance.now();
-  }, []);
+    // Read ?service= / ?location= in the browser so the page itself stays static (CDN-cached).
+    const params = new URLSearchParams(window.location.search);
+    const s = params.get("service");
+    if (s && services.some((x) => x.slug === s)) setService(s);
+    const loc = params.get("location");
+    if (loc) setInitialLocation(loc.slice(0, 200));
+  }, [services]);
 
   const onFirstInput = () => {
     if (!started.current) {
@@ -229,6 +226,7 @@ export function EnquiryForm({
           <input
             id="location"
             name="location"
+            key={initialLocation ?? "empty"}
             defaultValue={initialLocation}
             required
             className="field"

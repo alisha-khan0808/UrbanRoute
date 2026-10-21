@@ -4,7 +4,9 @@
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
-  body { @apply bg-paper text-ink antialiased; }
+  /* clip (not hidden) so sticky headers keep working; guards against any stray overflow zooming mobile pages out */
+  body { @apply bg-paper text-ink antialiased; overflow-x: clip; }
+  svg, canvas, img { max-width: 100%; }
   :focus-visible { @apply outline-none ring-2 ring-flare ring-offset-2 ring-offset-paper; }
   h1, h2, h3 { @apply tracking-tight; }
 }

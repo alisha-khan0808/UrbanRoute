@@ -15,9 +15,9 @@ export const SceneSettingsContext = createContext<SceneSettings>({ quality: "med
 export const useSceneSettings = () => useContext(SceneSettingsContext);
 
 export const QUALITY_PRESETS: Record<Quality, { dpr: [number, number]; shadows: boolean; shadowMap: number; density: number }> = {
-  low: { dpr: [1, 1], shadows: false, shadowMap: 512, density: 0.45 },
-  medium: { dpr: [1, 1.5], shadows: true, shadowMap: 1024, density: 0.75 },
-  high: { dpr: [1, 2], shadows: true, shadowMap: 2048, density: 1 },
+  low: { dpr: [1, 1.5], shadows: false, shadowMap: 512, density: 0.4 },
+  medium: { dpr: [1, 1.5], shadows: true, shadowMap: 1024, density: 0.7 },
+  high: { dpr: [1, 1.75], shadows: true, shadowMap: 2048, density: 1 },
 };
 
 /** Pick a starting preset from coarse device signals; PerformanceMonitor refines it at runtime. */
@@ -27,8 +27,10 @@ export function detectQuality(): Quality {
   const small = Math.min(window.innerWidth, window.innerHeight) < 600;
   const cores = navigator.hardwareConcurrency ?? 4;
   const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
-  if (coarse || small || cores <= 4 || memory <= 4) return coarse && small ? "low" : "medium";
-  return cores >= 8 ? "high" : "medium";
+  // Phones and tablets: no shadows, fewer moving agents — keeps 30+ FPS and battery use down.
+  if (coarse || small) return "low";
+  if (cores <= 4 || memory <= 4) return "medium";
+  return cores >= 8 && memory >= 8 ? "high" : "medium";
 }
 
 export function hasWebGL(): boolean {

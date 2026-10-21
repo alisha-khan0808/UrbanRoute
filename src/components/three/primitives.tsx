@@ -484,7 +484,6 @@ export function Movers({
             refs.current[gi] = m;
           }}
           args={[g.geometry, undefined, count]}
-          castShadow
           frustumCulled={false}
         >
           <meshStandardMaterial

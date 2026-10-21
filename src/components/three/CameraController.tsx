@@ -97,8 +97,8 @@ export function CameraController({
           ]),
           fromTarget: start.target,
           toTarget: dest.target.clone(),
-          start: performance.now() + 250,
-          duration: 3400,
+          start: performance.now() + 100,
+          duration: 2400,
         };
         return;
       }

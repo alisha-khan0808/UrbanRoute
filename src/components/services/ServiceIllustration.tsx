@@ -151,7 +151,13 @@ function Scene({ sceneKey }: { sceneKey: string }) {
 
 export function ServiceIllustration({ sceneKey, className, title }: { sceneKey: string; className?: string; title?: string }) {
   return (
-    <svg viewBox="40 20 320 230" className={cn("h-full w-full", className)} role={title ? "img" : undefined} aria-hidden={title ? undefined : true} aria-label={title}>
+    <svg
+      viewBox="40 20 320 230"
+      width="320"
+      height="230"
+      // Width-driven sizing: a percentage height inside an aspect-ratio box makes
+      // iOS Safari compute a huge intrinsic width and blow out the page.
+      className={cn("block h-auto w-full max-w-full", className)} role={title ? "img" : undefined} aria-hidden={title ? undefined : true} aria-label={title}>
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />

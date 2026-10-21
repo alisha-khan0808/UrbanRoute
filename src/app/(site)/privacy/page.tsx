@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { CMSRenderer } from "@/components/cms/CMSRenderer";
 import { getPage } from "@/lib/cms";
 
-export const revalidate = 60;
-
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage("privacy");
   return { title: page.seo.title, description: page.seo.description, alternates: { canonical: "/privacy" } };

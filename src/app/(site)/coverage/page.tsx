@@ -3,8 +3,6 @@ import { CoverageExplorer } from "@/components/coverage/CoverageExplorer";
 import { CMSRenderer } from "@/components/cms/CMSRenderer";
 import { getPage, getRegions } from "@/lib/cms";
 
-export const revalidate = 60;
-
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage("coverage");
   return { title: page.seo.title, description: page.seo.description, alternates: { canonical: "/coverage" } };

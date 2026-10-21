@@ -5,8 +5,6 @@ import { buttonClass } from "@/components/ui/button";
 import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 import { getServices } from "@/lib/cms";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "Services — TMPs, Event Traffic Management, QS & TIA | Urban Route NZ",
   description:
@@ -38,9 +36,9 @@ export default async function ServicesPage() {
         <ol className="grid gap-5">
           {services.map((s) => (
             <li key={s.slug}>
-              <article className="card grid overflow-hidden md:grid-cols-12">
+              <article className="card grid min-w-0 overflow-hidden md:grid-cols-12">
                 <div className="bg-gradient-to-b from-white to-paper p-4 md:col-span-4">
-                  <ServiceIllustration sceneKey={s.sceneKey} className="mx-auto max-h-56" />
+                  <ServiceIllustration sceneKey={s.sceneKey} className="mx-auto max-w-sm" />
                 </div>
                 <div className="flex flex-col p-6 md:col-span-8 md:p-8">
                   <p className="text-sm font-extrabold text-flare">{s.number}</p>

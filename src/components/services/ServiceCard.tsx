@@ -7,10 +7,10 @@ export function ServiceCard({ service, compact = false }: { service: Pick<Servic
   return (
     <Link
       href={`/services/${service.slug}`}
-      className="card group flex h-full flex-col overflow-hidden transition hover:-translate-y-0.5 hover:shadow-lift"
+      className="card group flex h-full min-w-0 flex-col overflow-hidden transition hover:-translate-y-0.5 hover:shadow-lift"
     >
       {!compact && (
-        <div className="aspect-[16/10] bg-gradient-to-b from-white to-paper p-3">
+        <div className="flex aspect-[16/10] items-center overflow-hidden bg-gradient-to-b from-white to-paper p-3">
           <ServiceIllustration sceneKey={service.sceneKey} />
         </div>
       )}

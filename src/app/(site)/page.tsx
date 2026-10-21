@@ -6,8 +6,6 @@ import { ServiceCard } from "@/components/services/ServiceCard";
 import { isSceneKey } from "@/components/three/layout";
 import { getPage, getSceneConfig, getServices } from "@/lib/cms";
 
-export const revalidate = 60;
-
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage("home");
   return {
@@ -74,7 +72,7 @@ export default async function HomePage() {
         </div>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s) => (
-            <li key={s.slug}>
+            <li key={s.slug} className="min-w-0">
               <ServiceCard service={s} />
             </li>
           ))}

@@ -2,7 +2,8 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useInView } from "@/components/three/useInView";
 import { Box, Map as MapIcon, MapPin } from "lucide-react";
 import { NZMapSvg } from "./NZMapSvg";
 import { buttonClass } from "@/components/ui/button";
@@ -23,6 +24,8 @@ export function CoverageExplorer({ regions }: { regions: Region[] }) {
   const prefs = useExperiencePrefs();
   const [selected, setSelected] = useState<string | null>(regions[0]?.id ?? null);
   const [mode, setMode] = useState<"3d" | "2d">("3d");
+  const mapRef = useRef<HTMLDivElement>(null);
+  const onScreen = useInView(mapRef);
   const current = regions.find((r) => r.id === selected) ?? null;
   const show3D = prefs.ready && !prefs.staticView && mode === "3d";
 
@@ -39,9 +42,9 @@ export function CoverageExplorer({ regions }: { regions: Region[] }) {
   return (
     <div className="grid gap-6 lg:grid-cols-12">
       <div className="lg:col-span-7">
-        <div className="card relative aspect-[4/5] overflow-hidden bg-paper sm:aspect-[4/3] lg:aspect-[5/6]">
+        <div ref={mapRef} className="card relative aspect-[4/5] overflow-hidden bg-paper sm:aspect-[4/3] lg:aspect-[5/6]">
           {show3D ? (
-            <NZMap3D regions={regions} selected={selected} onSelect={select} quality={prefs.quality} />
+            <NZMap3D regions={regions} selected={selected} onSelect={select} quality={prefs.quality} active={onScreen} />
           ) : (
             <div className="h-full p-4">
               <NZMapSvg regions={regions} selected={selected} onSelect={select} />

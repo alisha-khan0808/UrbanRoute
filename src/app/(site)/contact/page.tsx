@@ -9,18 +9,14 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: page.seo.title, description: page.seo.description, alternates: { canonical: "/contact" } };
 }
 
-export default async function ContactPage({ searchParams }: { searchParams: { service?: string; location?: string } }) {
+export default async function ContactPage() {
   const [page, services, settings] = await Promise.all([getPage("contact"), getServices(), getSettings()]);
   return (
     <>
       <CMSRenderer sections={page.sections} />
       <section className="container-x grid gap-8 py-10 md:py-14 lg:grid-cols-12">
         <div className="lg:col-span-8">
-          <EnquiryForm
-            services={services.map((s) => ({ slug: s.slug, title: s.title }))}
-            initialService={searchParams.service}
-            initialLocation={searchParams.location?.slice(0, 200)}
-          />
+          <EnquiryForm services={services.map((s) => ({ slug: s.slug, title: s.title }))} />
         </div>
         <aside className="space-y-4 lg:col-span-4">
           <div className="card p-6">

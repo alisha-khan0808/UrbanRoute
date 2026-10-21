@@ -7,6 +7,7 @@ import { ServiceIllustration } from "./ServiceIllustration";
 import { QsLayerPicker } from "@/components/home/ContentOverlay";
 import { useExperiencePrefs } from "@/components/home/usePrefs";
 import { isSceneKey } from "@/components/three/layout";
+import { useInView } from "@/components/three/useInView";
 import type { QsLayer } from "@/components/three/zones/ZonesB";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ export function ServiceScene({ sceneKey, caption, title }: { sceneKey: string; c
   const prefs = useExperiencePrefs();
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const onScreen = useInView(ref);
   const [qsLayer, setQsLayer] = useState<QsLayer | null>(null);
   const can3D = prefs.ready && !prefs.staticView && isSceneKey(sceneKey);
 
@@ -32,7 +34,7 @@ export function ServiceScene({ sceneKey, caption, title }: { sceneKey: string; c
     <figure className="w-full">
       <div ref={ref} className="card relative aspect-[4/3] overflow-hidden bg-paper sm:aspect-[16/11]">
         {can3D && inView && isSceneKey(sceneKey) ? (
-          <ServiceSceneCanvas sceneKey={sceneKey} quality={prefs.quality} motion={prefs.motion} qsLayer={qsLayer} />
+          <ServiceSceneCanvas sceneKey={sceneKey} quality={prefs.quality} motion={prefs.motion} qsLayer={qsLayer} active={onScreen} />
         ) : (
           <div className="flex h-full items-center justify-center p-6">
             <ServiceIllustration sceneKey={sceneKey} title={`Illustration: ${title}`} />

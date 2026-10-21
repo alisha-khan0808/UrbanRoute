@@ -95,15 +95,18 @@ export default function NZMap3D({
   selected,
   onSelect,
   quality,
+  active = true,
 }: {
   regions: Region[];
   selected: string | null;
   onSelect: (id: string) => void;
   quality: Quality;
+  active?: boolean;
 }) {
   const preset = QUALITY_PRESETS[quality];
   return (
     <Canvas
+      frameloop={active ? "always" : "never"}
       shadows={preset.shadows}
       dpr={preset.dpr}
       camera={{ fov: 30, position: [6, 62, 44], near: 1, far: 300 }}

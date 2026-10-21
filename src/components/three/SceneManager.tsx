@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense, type ReactNode } from "react";
-import { useGLTF } from "@react-three/drei";
+import { lazy, Suspense, type ReactNode } from "react";
 import { AdvisoryZone, EventZone, IntersectionZone, RoadworksZone } from "./zones/ZonesA";
 import { CoordinationZone, QsZone, TiaZone, type QsLayer } from "./zones/ZonesB";
 import { ZONES, type SceneKey } from "./layout";
@@ -29,11 +28,8 @@ export function Zone({ sceneKey, qsLayer }: { sceneKey: SceneKey; qsLayer?: QsLa
   }
 }
 
-/** Optional prebuilt glTF/GLB model configured in the CMS (scene.modelUrl). */
-function GlbModel({ url }: { url: string }) {
-  const { scene } = useGLTF(url);
-  return <primitive object={scene} />;
-}
+/** Optional prebuilt glTF/GLB model (scene.modelUrl). Loader code is only downloaded when used. */
+const GlbModel = lazy(() => import("./GlbModel"));
 
 /** All seven zones placed into the shared world. */
 export function SceneManager({ qsLayer, modelUrl }: { qsLayer?: QsLayer | null; modelUrl?: string }) {
